@@ -1,0 +1,8 @@
+# Emacs generated files (autosave, original and lock-files)
+#*#
+*~
+.#*
+
+# Unnecessary dirs
+node_modules/**/examples/
+node_modules/**/docs/

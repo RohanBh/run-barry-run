@@ -1,0 +1,22 @@
+{
+  "name": "run-barry-run",
+  "version": "1.0.0",
+  "description": "A fun project that mimics the lightning trails behind The Flash as he runs",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RohanBh/run-barry-run.git"
+  },
+  "author": "RohanBh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RohanBh/run-barry-run/issues"
+  },
+  "homepage": "https://github.com/RohanBh/run-barry-run#readme",
+  "dependencies": {
+    "paper": "^0.11.5"
+  }
+}
