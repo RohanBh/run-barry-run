@@ -1,24 +1,18 @@
 
-var rect = new Rectangle(new Point(400, 250), new Size(50, 80));
-//var flashRect = new Path.Rectangle(rect);
-//flashRect.strokeColor = 'white';
-//flashRect.rotate(30);
+var rect = new Rectangle(new Point(), new Size(50, 80));
+rect.topLeft = view.topLeft;
 
-//var flashTop = rect.topCenter;
-//var flashBot = rect.bottomCenter;
-//var flash = new Path(flashTop, flashBot);
-//flash.strokeColor = 'white';
+var initialAngle = 0;
 
 var flash = new Raster("flash");
 flash.scale(0.04);
 flash.position = rect.center;
-flash.rotate(30);
+flash.rotate(initialAngle);
 
-var mousePath;
 var speed = 1;
 var flashLen = flash.length;
-var prevDir = 30;
-var dirn = 30;
+var prevDir = initialAngle;
+var dirn = initialAngle;
 var dirDelta = 60;
 var trails = []; 
 
@@ -52,30 +46,20 @@ function onFrame(event) {
     }
 }
 
-function onMouseDown(event) {
-    mousePath = new Path();
-    mousePath.add(event.point);
-}
-
 function onMouseDrag(event) {
-    mousePath.add(event.point);
-    mousePath.smooth();
     rect.center = event.point;
-    //flashRect.position = event.point;
     flash.position = event.point;
     
     dirn = event.delta.angle;
     var rotate = dirn - prevDir;
     prevDir = dirn;
     flash.rotate(rotate);
-    //flashRect.rotate(rotate);
-
-    speed = event.delta.length * 2;
-    if (speed > 7) speed = 7;
+    
+    speed = event.delta.length * 0.75;
+    if (speed > 8) speed = 8;
 }
 
 function onMouseUp(event) {
-    mousePath.removeSegments();
     speed = 1;
 }
 
@@ -111,8 +95,6 @@ function drawTrail(point, trailPts) {
     }
     trail.strokeColor = "#dd8020";
     trail.fillColor =  'white';
-    //trail.shadowColor = "#dd9644";
-    //trail.shadowBlur = 10;
     
     trails.push(trail);
 }
@@ -127,7 +109,7 @@ function negPos() {
 }
 
 function trailLength(maxLen) {
-    if (maxLen == null) maxLen = 10 * speed / 3;
+    if (maxLen == null) maxLen = 13 * speed / 3;
     return Math.floor(Math.random() * maxLen);
 }
 
