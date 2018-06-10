@@ -1,13 +1,17 @@
 
 var rect = new Rectangle(new Point(400, 250), new Size(50, 80));
-var flashRect = new Path.Rectangle(rect);
-flashRect.strokeColor = 'white';
-flashRect.rotate(30);
+//var flashRect = new Path.Rectangle(rect);
+//flashRect.strokeColor = 'white';
+//flashRect.rotate(30);
 
-var flashTop = rect.topCenter;
-var flashBot = rect.bottomCenter;
-var flash = new Path(flashTop, flashBot);
-flash.strokeColor = 'white';
+//var flashTop = rect.topCenter;
+//var flashBot = rect.bottomCenter;
+//var flash = new Path(flashTop, flashBot);
+//flash.strokeColor = 'white';
+
+var flash = new Raster("flash");
+flash.scale(0.04);
+flash.position = rect.center;
 flash.rotate(30);
 
 var mousePath;
@@ -16,7 +20,7 @@ var flashLen = flash.length;
 var prevDir = 30;
 var dirn = 30;
 var dirDelta = 60;
-var trails = [];
+var trails = []; 
 
 points = chooseRandomPoints(rect);
 for (j = 0; j < points.length; j++) {
@@ -56,18 +60,18 @@ function onMouseDown(event) {
 function onMouseDrag(event) {
     mousePath.add(event.point);
     mousePath.smooth();
-    flashRect.translate(event.point - rect.center);
-    flash.translate(event.point - rect.center);
     rect.center = event.point;
-
+    //flashRect.position = event.point;
+    flash.position = event.point;
+    
     dirn = event.delta.angle;
     var rotate = dirn - prevDir;
     prevDir = dirn;
     flash.rotate(rotate);
-    flashRect.rotate(rotate);
+    //flashRect.rotate(rotate);
 
     speed = event.delta.length * 2;
-    if (speed > 15) speed = 15;
+    if (speed > 7) speed = 7;
 }
 
 function onMouseUp(event) {
@@ -123,7 +127,7 @@ function negPos() {
 }
 
 function trailLength(maxLen) {
-    if (maxLen == null) maxLen = 10;
-    return Math.floor(Math.random()*maxLen + speed * 0.8);
+    if (maxLen == null) maxLen = 10 * speed / 3;
+    return Math.floor(Math.random() * maxLen);
 }
 
