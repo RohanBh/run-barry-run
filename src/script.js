@@ -1,5 +1,5 @@
 
-var rect = new Rectangle(new Point(400, 250), new Size(70, 100));
+var rect = new Rectangle(new Point(400, 250), new Size(50, 80));
 var flashRect = new Path.Rectangle(rect);
 flashRect.strokeColor = 'white';
 flashRect.rotate(30);
@@ -11,7 +11,7 @@ flash.strokeColor = 'white';
 flash.rotate(30);
 
 var mousePath;
-var speed = 40;
+var speed = 1;
 var flashLen = flash.length;
 var prevDir = 30;
 var dirn = 30;
@@ -24,23 +24,26 @@ for (j = 0; j < points.length; j++) {
 }
 
 function onFrame(event) {
-    if (Math.random() < 0.35) {
-	var num = Math.floor(Math.random() * 3) + 1;
+    if (Math.random() < speed / 3) {
+	var num = Math.floor(Math.random() * 2) + 1;
 	var d = chooseRandomPoints(rect, num);
 	for (it = 0; it < num; it++) {
 	    var x = trails.shift();
-	    console.log(trails.length);
 	    if (x != null) {
 		x.removeSegments();
 		drawTrail(d[it]);
-		//console.log(trails.length);
 	    }
 	}
-	while(trails.length > 7) {
-	    trails.shift().removeSegments();
+	if (trails.length > 7) {
+	    var garbage = trails.splice(0, trails.length);
+	    for (it = 0; it < garbage.length; it++) {
+		garbage[it].removeSegments();
+		console.log("called");
+	    }
 	}
-	while(trails.length < 3) {
-	    drawTrail(chooseRandomPoints(rect, 1));
+	if (trails.length < 2) {
+	    drawTrail(chooseRandomPoints(rect, 3));
+	    console.log("called");
 	}
     }
 }
@@ -62,15 +65,19 @@ function onMouseDrag(event) {
     prevDir = dirn;
     flash.rotate(rotate);
     flashRect.rotate(rotate);
+
+    speed = event.delta.length * 2;
+    if (speed > 15) speed = 15;
 }
 
 function onMouseUp(event) {
     mousePath.removeSegments();
+    speed = 1;
 }
 
 function chooseRandomPoints(flashBounds, numPts) {
     if (numPts == null) {
-	numPts = Math.floor(Math.random() * 5) + 4;
+	numPts = Math.floor(Math.random() * 4) + 4;
     }
     var pts = [];
     var halfRectScale = new Point(flashBounds.width / 2, flashBounds.height);
@@ -97,35 +104,13 @@ function drawTrail(point, trailPts) {
 	lastPt += newPt;
 	trail.add(mid + normalVector);
 	trail.insert(0, mid - normalVector);
-	if (Math.random() < 0.001) {
-	    var numBranch = getBranches();
-	    for(k = 0; k < numBranch - 1; k++) {
-		drawTrail(lastPt, trailPts - i);
-	    }
-	}
     }
-    trail.strokeColor = '#ec7c24';
-    trail.fillColor =  '#ec7c24';
+    trail.strokeColor = "#dd8020";
+    trail.fillColor =  'white';
+    //trail.shadowColor = "#dd9644";
+    //trail.shadowBlur = 10;
+    
     trails.push(trail);
-}
-
-function mutateTrail(trail) {
-    var segments = trail.segments;
-    for (j = 0; j < segments.length; j++) {
-	if (Math.random() < 0.05) {
-	    var seg = segments[j];
-	    var step = Math.random() * 15;
-	    var angle = getAngle();
-	    var newPt = new Point({length: step, angle: angle});
-	    if (seg.previous != null) {
-		seg.point = seg.previous.point + newPt;
-	    }
-	}
-    }
-}
-
-function getBranches() {
-    return Math.floor(Math.pow(Math.random(), 2) * 3) + 2;
 }
 
 function getAngle() {
